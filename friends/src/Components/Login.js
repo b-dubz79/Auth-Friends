@@ -1,13 +1,17 @@
-import React from 'react'
-import Axios from 'axios'
+import React, { useState } from 'react'
+import axios from 'axios'
+import {axiosWithAuth} from '../Utils/axiosWithAuth'
 
 class Login extends React.Component {
-    state = {
+   constructor(props){
+   super(props);
+    this.state = {
         credentials: {
         username: '',
         password: ''
         }
     }
+}
 
     handleChange = e => {
         this.setState({
@@ -18,22 +22,25 @@ class Login extends React.Component {
         })
     }
 
-    handleSubmit = e => {
-        e.preventDefault();
+
+
         //post request sending credentials to api
-        Axios.post('http://localhost:5000/api/login', this.state.credentials)
+            login = e => {
+            e.preventDefault();
+            axiosWithAuth()
+            .post('/api/login', this.state.credentials)
         .then(res => {
             localStorage.setItem('token', res.data.payload);
-            //navigate user to proteced landing page
-            this.props.history.push('./FriendsList')
+            this.props.history.push('/FriendsList')
     })
         .catch(err => console.log(err))
-    }
+        }       
+    
     
     render(){
         return(
             <div>
-                <form onSubmit={this.handleSubmit}>
+                <form onSubmit={this.login}>
                     <input
                     type='text'
                     name='username'
